@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: defis3
+    #command: >
+    #  sh -c "python manage.py makemigrations &&
+    #         python manage.py migrate &&
+    #         python manage.py runserver 0.0.0.0:5002"
+    volumes:
+      - ./defis/:/usr/src/defis/
+    env_file:
+      - ./.env.dev-sample
+    ports:
+      - "8002:5002"
+    depends_on:
+      - db
+
+
+  db:
+    image: postgres:15
+    container_name: librairie-postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: librairie_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
